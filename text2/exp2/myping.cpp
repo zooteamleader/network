@@ -1,4 +1,4 @@
-#include "myping.h"
+﻿#include "myping.h"
 #include <QDebug>
 
 MyPing::MyPing(QObject *parent = nullptr,QStringList ipList = QStringList(""),int timeout = 1000,int count = 10) : QThread(parent)
@@ -10,10 +10,9 @@ MyPing::MyPing(QObject *parent = nullptr,QStringList ipList = QStringList(""),in
 
 
 /*
-The response is an IP packet. We must decode the IP header to locate
-the ICMP data
+解码 IP 标头找到ICMP 数据
 */
-bool MyPing::decode_resp(char *buf, int bytes,struct sockaddr_in *from)
+bool MyPing::decode_resp(char *buf, int bytes,struct sockaddr_in *from)//解析接收到的 ICMP 数据包，判断是否为期望的回复包，并输出相关信息
 {
     //64 bytes from 112.80.248.76: icmp_seq = 4  time: 62 ms  ttl: 112
     IpHeader *iphdr;
@@ -44,22 +43,12 @@ bool MyPing::decode_resp(char *buf, int bytes,struct sockaddr_in *from)
         return false;
     }
 
-//    qDebug()<<QString("%1 bytes from %2:").arg(bytes).arg(inet_ntoa(from->sin_addr));
-//    qDebug()<<QString(" icmp_seq = %1 ").arg(icmphdr->i_seq);
-//    qDebug()<<QString(" time: %1 ms ").arg(GetTickCount()-icmphdr->timestamp);
-//    qDebug()<<QString(" ttl: %1").arg(iphdr->ttl);
-
     return true;
 
-    //    printf("%d bytes from %s:",bytes, inet_ntoa(from->sin_addr));
-    //    printf(" icmp_seq = %d ",icmphdr->i_seq);
-    //    printf(" time: %d ms ",GetTickCount()-icmphdr->timestamp);
-    //    printf(" ttl: %d",iphdr->ttl);
-    //    printf("\n");
 }
 
 //完成ICMP的校验
-USHORT MyPing::checksum(USHORT *buffer, int size)
+USHORT MyPing::checksum(USHORT *buffer, int size)//计算 ICMP 包的校验和
 {
     unsigned long cksum=0;
 
@@ -80,9 +69,9 @@ USHORT MyPing::checksum(USHORT *buffer, int size)
 }
 
 /*
-Helper function to fill in various stuff in our ICMP request.
+Helper 函数来填写 ICMP 请求中的各种内容。
 */
-void MyPing::fill_icmp_data(char * icmp_data, int datasize)
+void MyPing::fill_icmp_data(char * icmp_data, int datasize)//填充 ICMP 数据包
 {
 
     IcmpHeader *icmp_hdr;
@@ -103,7 +92,7 @@ void MyPing::fill_icmp_data(char * icmp_data, int datasize)
     memset(datapart,'E', datasize - sizeof(IcmpHeader));  //填充了一些废物
 }
 
-bool MyPing::isLegalIP(QString ip)
+bool MyPing::isLegalIP(QString ip)//检查 IP 地址是否合法
 {
     WSADATA* wsa =(WSADATA*) malloc(sizeof(WSADATA));
     WSAStartup(MAKEWORD(2,2),wsa);
@@ -120,27 +109,27 @@ bool MyPing::isLegalIP(QString ip)
     return flag;
 }
 
-void MyPing::setIpList(QStringList ipList)
+void MyPing::setIpList(QStringList ipList)//设置需要 ping 的 IP 列表
 {
     this->ipList = ipList;
 }
 
-void MyPing::setTimeout(int timeout)
+void MyPing::setTimeout(int timeout)//设置超时时间
 {
     this->timeout = timeout;
 }
 
-void MyPing::setCount(int count)
+void MyPing::setCount(int count)//设置 ping 包的数量
 {
     this->pingCount = count;
 }
 
-void MyPing::stopThread()
+void MyPing::stopThread()//停止线程
 {
     this->threadStop = true;
 }
 
-void MyPing::run()
+void MyPing::run()//线程执行函数，依次 ping 列表中的 IP 地址，并将结果发送给主线程
 {
     threadStop = false;
 
@@ -283,7 +272,7 @@ void MyPing::run()
             successFlag = decode_resp(recvbuf,bread,&from);
             if(successFlag)
             {
-                emit this->sendResult(ipList[i] +"#"+"YES");
+                emit this->sendResult(ipList[i] +"#"+"在线");
                 break;
             }
         }
@@ -293,7 +282,7 @@ void MyPing::run()
 
         if(!successFlag)
         {
-           emit this->sendResult(ipList[i] +"#"+"NO");
+           emit this->sendResult(ipList[i] +"#"+"超时");
         }
 
     }

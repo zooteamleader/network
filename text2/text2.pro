@@ -7,7 +7,7 @@
 QT       += core gui
 QT       += network
 RC_ICONS = start.ico
-
+CONFIG += c++11
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = text2
@@ -52,6 +52,7 @@ win32: LIBS += -lws2_32
 #}
 
 #RC_FILE = uac.rc
+
 
 
 

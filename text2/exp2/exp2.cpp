@@ -1,24 +1,19 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QMessageBox>
-
+#include <QNetworkInterface>//网卡信息
+#include <QHostInfo>//计算机名
+#include <QNetworkAddressEntry>
+#include <QList>
 void MainWindow::initExp2()
 {
-    ui->tableWidget_exp2_tracertResult->setColumnCount(2);
-    ui->tableWidget_exp2_tracertResult->setHorizontalHeaderLabels(QStringList()<<"时间"<< "IP地址");
-    ui->tableWidget_exp2_tracertResult->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-    ui->tableWidget_exp2_tracertResult->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
-    exp2_tracertResultCount = 0;
 
-    myTracert = new MyTracert(this,ui->lineEdit_exp2_tracertIP->text(),ui->lineEdit_exp2_tracertTime->text().toInt(),ui->lineEdit_exp2_tracertCount->text().toInt());
-    connect(myTracert,&MyTracert::sendResult,this,&MainWindow::exp2_recvTracertResult);
-    connect(myTracert,&MyTracert::finished,this,&MainWindow::exp2_myTracertFinished);
-    connect(this,&MainWindow::stopTracertThread,myTracert,&MyTracert::stopThread);
-
-    ui->tableWidget_exp2_pingResult->setColumnCount(2);
-    ui->tableWidget_exp2_pingResult->setHorizontalHeaderLabels(QStringList()<<"IP地址"<< "状态");
+    ui->tableWidget_exp2_pingResult->setColumnCount(4);
+    ui->tableWidget_exp2_pingResult->setHorizontalHeaderLabels(QStringList()<<"IP地址" << "网卡地址"<< "主机名"<<"返回信息");
     ui->tableWidget_exp2_pingResult->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
+    ui->tableWidget_exp2_pingResult->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
+    ui->tableWidget_exp2_pingResult->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Stretch);
     ui->tableWidget_exp2_pingResult->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
     exp2_pingResultCount = 0;
 
@@ -29,70 +24,6 @@ void MainWindow::initExp2()
 
 }
 
-void MainWindow::on_pushButton_exp2_tracertStart_clicked()
-{
-    if(!MyTracert::isLegalIP(ui->lineEdit_exp2_tracertIP->text()))
-    {
-        QMessageBox::critical(this,"不合法","不合法");
-        return ;
-    }
-
-    if(ui->pushButton_exp2_tracertStart->text() == "开始")
-    {
-        myTracert->setIP(ui->lineEdit_exp2_tracertIP->text());
-        myTracert->setiTimeout(ui->lineEdit_exp2_tracertTime->text().toInt());
-        myTracert->setDEF_MAX_HOP(ui->lineEdit_exp2_tracertCount->text().toInt());
-
-        myTracert->start();
-
-        ui->pushButton_exp2_tracertStart->setText("停止");
-        ui->lineEdit_exp2_tracertCount->setEnabled(false);
-        ui->lineEdit_exp2_tracertIP->setEnabled(false);
-        ui->lineEdit_exp2_tracertTime->setEnabled(false);
-
-        ui->tableWidget_exp2_tracertResult->clear();
-        ui->tableWidget_exp2_tracertResult->setColumnCount(2);
-        ui->tableWidget_exp2_tracertResult->setHorizontalHeaderLabels(QStringList()<<"时间"<< "IP地址");
-        exp2_tracertResultCount = 0;
-
-
-
-
-    }
-    else if(ui->pushButton_exp2_tracertStart->text() == "停止")
-    {
-        emit stopTracertThread();
-
-        ui->pushButton_exp2_tracertStart->setText("开始");
-        ui->lineEdit_exp2_tracertCount->setEnabled(true);
-        ui->lineEdit_exp2_tracertIP->setEnabled(true);
-        ui->lineEdit_exp2_tracertTime->setEnabled(true);
-
-    }
-
-}
-
-void MainWindow::exp2_recvTracertResult(QString data)
-{
-    if(ui->pushButton_exp2_tracertStart->text() == "开始")
-        return ;
-
-    exp2_tracertResultCount ++;
-    QStringList result = data.split('#');
-    ui->tableWidget_exp2_tracertResult->setRowCount(exp2_tracertResultCount);
-    ui->tableWidget_exp2_tracertResult->setItem(exp2_tracertResultCount-1,0,new QTableWidgetItem(result[0]));
-    ui->tableWidget_exp2_tracertResult->setItem(exp2_tracertResultCount-1,1,new QTableWidgetItem(result[1]));
-    ui->tableWidget_exp2_tracertResult->scrollToBottom();
-}
-
-void MainWindow::exp2_myTracertFinished()
-{
-
-    ui->pushButton_exp2_tracertStart->setText("开始");
-    ui->lineEdit_exp2_tracertCount->setEnabled(true);
-    ui->lineEdit_exp2_tracertIP->setEnabled(true);
-    ui->lineEdit_exp2_tracertTime->setEnabled(true);
-}
 
 void MainWindow::exp2_myPingError(QString data)
 {
@@ -145,7 +76,7 @@ void MainWindow::on_pushButton_exp2_pingStart_clicked()
             t += QString::number(i);
 
             ipList<<t;
-        }
+        }//获取ip信息
 
         myPing->setIpList(ipList);
         myPing->setTimeout(ui->lineEdit_exp2_pingTime->text().toInt());
@@ -159,8 +90,8 @@ void MainWindow::on_pushButton_exp2_pingStart_clicked()
         ui->lineEdit_exp2_pingTime->setEnabled(false);
 
         ui->tableWidget_exp2_pingResult->clear();
-        ui->tableWidget_exp2_pingResult->setColumnCount(2);
-        ui->tableWidget_exp2_pingResult->setHorizontalHeaderLabels(QStringList()<<"IP地址"<< "状态");
+        ui->tableWidget_exp2_pingResult->setColumnCount(4);
+        ui->tableWidget_exp2_pingResult->setHorizontalHeaderLabels(QStringList()<<"IP地址"<< "网卡地址"<< "主机名"<< "返回信息");
         exp2_pingResultCount = 0;
 
     }
@@ -179,7 +110,7 @@ void MainWindow::on_pushButton_exp2_pingStart_clicked()
 
 void MainWindow::exp2_recvPingResult(QString data)
 {
-//    qDebug()<<data;
+    //qDebug()<<data;//ping信息
     if(ui->pushButton_exp2_pingStart->text() == "开始")
         return ;
 
@@ -187,15 +118,37 @@ void MainWindow::exp2_recvPingResult(QString data)
     QStringList result = data.split('#');
     if(result[1] == "*")
     {
+
         exp2_pingResultCount ++;
-        ui->tableWidget_exp2_pingResult->setRowCount(exp2_pingResultCount);
-        ui->tableWidget_exp2_pingResult->setItem(exp2_pingResultCount-1,0,new QTableWidgetItem(result[0]));
-        ui->tableWidget_exp2_pingResult->setItem(exp2_pingResultCount-1,1,new QTableWidgetItem("..."));
-        ui->tableWidget_exp2_pingResult->scrollToBottom();
+          ui->tableWidget_exp2_pingResult->setRowCount(exp2_pingResultCount);
+          ui->tableWidget_exp2_pingResult->setItem(exp2_pingResultCount-1,0,new QTableWidgetItem(result[0]));
+          ui->tableWidget_exp2_pingResult->setItem(exp2_pingResultCount-1,3,new QTableWidgetItem("..."));//返回信息在等待中
+          ui->tableWidget_exp2_pingResult->scrollToBottom();
+
+          // 获取IP地址对应的网卡地址和主机名
+          QString ipAddr = result[0];
+          QHostAddress hostAddr(ipAddr);
+          QString macAddr = "";
+          QString hostName = "";
+         QList<QNetworkInterface>list = QNetworkInterface::allInterfaces();//获取所有网络接口的列表
+         foreach(QNetworkInterface netinterface, list) {//foreach循环遍历每个网络接口
+             QList<QNetworkAddressEntry> entryList = netinterface.addressEntries();
+             foreach (QNetworkAddressEntry entry, entryList) {//foreach循环遍历当前接口的地址条目列表
+                 if(entry.ip() == hostAddr){
+                     macAddr = netinterface.hardwareAddress();//网卡地址
+                     hostName = QHostInfo::localHostName();//主机名
+                     break;
+                 }
+              }
+          }
+
+          // 将网卡地址和主机名填充到表格中
+          ui->tableWidget_exp2_pingResult->setItem(exp2_pingResultCount-1,1,new QTableWidgetItem(macAddr));
+          ui->tableWidget_exp2_pingResult->setItem(exp2_pingResultCount-1,2,new QTableWidgetItem(hostName));
     }
-    else if(result[1] == "YES" || result[1] == "NO")
+    else if(result[1] == "在线" || result[1] == "超时")
     {
-        ui->tableWidget_exp2_pingResult->setItem(exp2_pingResultCount-1,1,new QTableWidgetItem(result[1]));
+        ui->tableWidget_exp2_pingResult->setItem(exp2_pingResultCount-1,3,new QTableWidgetItem(result[1]));
     }
 
 }
