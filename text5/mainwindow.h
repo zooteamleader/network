@@ -1,10 +1,10 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
 #include <QTcpSocket>
 
-#include "exp3/mymulticast.h"
+#include "exp5/mymulticast.h"
 
 
 namespace Ui {
@@ -32,16 +32,16 @@ signals:
 
 private slots:
 
-    //实验三
-    void exp3_myMulticastError(QString data);
+    //实验五
+    void exp5_myMulticastError(QString data);
 
-    void exp3_myMulticastFinished();
+    void exp5_myMulticastFinished();
 
-    void exp3_recvMulticastData(QString data);
+    void exp5_recvMulticastData(QString data);
 
-    void on_pushButton_exp3_start_clicked();
+    void on_pushButton_exp5_start_clicked();
 
-    void on_pushButton_exp3_send_clicked();
+    void on_pushButton_exp5_send_clicked();
 
 
 
@@ -49,9 +49,9 @@ private:
     Ui::MainWindow *ui;
 
 
-    //实验三
+    //实验五
     MyMulticast* myMulticast;
-    void initExp3();
+    void initExp5();
 
 
 

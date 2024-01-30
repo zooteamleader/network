@@ -28,13 +28,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    exp3/mymulticast.cpp \
-    exp3/exp3.cpp
+    exp5/mymulticast.cpp \
+    exp5/exp5.cpp \
+
 
 
 HEADERS += \
         mainwindow.h \
-    exp3/mymulticast.h
+    exp5/mymulticast.h
 
 FORMS += \
         mainwindow.ui
