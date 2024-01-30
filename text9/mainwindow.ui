@@ -37,7 +37,7 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_16">
        <item>
-        <widget class="QWidget" name="widget_exp8" native="true">
+        <widget class="QWidget" name="widget_exp9" native="true">
          <layout class="QVBoxLayout" name="verticalLayout_11" stretch="1,2,10">
           <property name="spacing">
            <number>5</number>
@@ -65,7 +65,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QWidget" name="widget_exp8_controller" native="true">
+           <widget class="QWidget" name="widget_exp9_controller" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="1,2,1,2,1,2,2">
              <property name="spacing">
               <number>5</number>
@@ -93,7 +93,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_exp8_localIp"/>
+              <widget class="QComboBox" name="comboBox_exp9_localIp"/>
              </item>
              <item>
               <widget class="QLabel" name="label_36">
@@ -106,9 +106,9 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_exp8_port">
+              <widget class="QLineEdit" name="lineEdit_exp9_port">
                <property name="text">
-                <string>8088</string>
+                <string>8000</string>
                </property>
               </widget>
              </item>
@@ -123,14 +123,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_exp8_fileName">
+              <widget class="QLineEdit" name="lineEdit_exp9_fileName">
                <property name="text">
                 <string>index.html</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_exp8_start">
+              <widget class="QPushButton" name="pushButton_exp9_start">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
                  <horstretch>0</horstretch>
@@ -146,7 +146,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QWidget" name="widget_exp8_debug" native="true">
+           <widget class="QWidget" name="widget_exp9_debug" native="true">
             <layout class="QVBoxLayout" name="verticalLayout_12">
              <property name="spacing">
               <number>5</number>
@@ -164,17 +164,11 @@
               <number>5</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_37">
-               <property name="text">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Debug&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
+              <widget class="QTextBrowser" name="textBrowser_exp9_debug">
+               <property name="openExternalLinks">
+                <bool>true</bool>
                </property>
               </widget>
-             </item>
-             <item>
-              <widget class="QTextBrowser" name="textBrowser_exp8_debug"/>
              </item>
             </layout>
            </widget>

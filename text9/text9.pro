@@ -27,14 +27,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    exp8/exp8.cpp \
-    exp8/myserver.cpp \
-    exp8/mysocket.cpp
+    exp9/exp9.cpp \
+    exp9/myserver.cpp \
+    exp9/mysocket.cpp
 
 HEADERS += \
         mainwindow.h \
-    exp8/myserver.h \
-    exp8/mysocket.h
+    exp9/myserver.h \
+    exp9/mysocket.h
 
 FORMS += \
         mainwindow.ui

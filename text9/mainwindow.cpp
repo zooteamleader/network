@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowIcon(QIcon(":/image/photo.jpg"));
 
 
-    initExp8();
+    initExp9();
 
 }
 

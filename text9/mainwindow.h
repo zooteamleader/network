@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QTcpSocket>
-#include "exp8/myserver.h"
+#include "exp9/myserver.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,20 +31,20 @@ signals:
 private slots:
 
 
-    //实验八
-    void on_pushButton_exp8_start_clicked();
+    //实验九 简单 Web Server 程序的设计与实现
+    void on_pushButton_exp9_start_clicked();
 
-    void exp8_myServerError(QString error);
+    void exp9_myServerError(QString error);
 
-    void exp8_recvServerData(QString data);
+    void exp9_recvServerData(QString data);
 
 private:
     Ui::MainWindow *ui;
 
 
-    //实验八
+    //实验九
     MyServer* myServer;
-    void initExp8();
+    void initExp9();
 
 
 };
